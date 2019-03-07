@@ -1,6 +1,7 @@
 package com.jay.cloud_board;
 
 import com.jay.cloud_board.base.Config;
+import com.jay.cloud_board.base.Constant;
 import com.jay.cloud_board.bean.ConnectingSocketInfo;
 import com.jay.cloud_board.tcp.Reader;
 import com.jay.cloud_board.tcp.Writer;
@@ -32,23 +33,10 @@ public class CloudBoardServer {
 				Socket acceptSocket = serverSocket.accept();
 //				acceptSocket.setSendBufferSize(10240);
 				ConnectingSocketInfo connectingSocketInfo = new ConnectingSocketInfo(acceptSocket, "");
-				String newAddress = connectingSocketInfo.getSocket().getInetAddress().getHostAddress();
-
-				//如果已经有这个ip的socketInfo,使之不可用
-				for (Iterator<ConnectingSocketInfo> iterator = sConnectingSocketInfos.iterator(); iterator.hasNext(); ) {
-					ConnectingSocketInfo next = iterator.next();
-					Socket socket = next.getSocket();
-					String hostAddress = socket.getInetAddress().getHostAddress();
-					if (newAddress.equals(hostAddress)) {
-						Logger4j.d(TAG, "旧i:" + hostAddress + "-----新ip:" + newAddress);
-						next.setUserId("");
-						next.getSocket().close();
-					}
-				}
 
 				sConnectingSocketInfos.add(connectingSocketInfo);
 
-				Logger4j.d(TAG, "一个用户连接进来 IP地址=" + acceptSocket.getInetAddress().getHostAddress());
+				Logger4j.d(TAG, "new user come in, addr=" + acceptSocket.getInetAddress().getHostAddress());
 
 				Reader.read(connectingSocketInfo);
 

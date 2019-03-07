@@ -2,6 +2,7 @@ package com.jay.cloud_board.tcp;
 
 import com.jay.cloud_board.CloudBoardServer;
 import com.jay.cloud_board.Logger4j;
+import com.jay.cloud_board.base.Constant;
 import com.jay.cloud_board.bean.ConnectingSocketInfo;
 
 import java.io.BufferedInputStream;
@@ -26,10 +27,14 @@ public class Reader {
 			@Override
 			public void run() {
 
-				Logger4j.d(TAG, "----开启一个socket读取线程 socketinfo=" + connectingSocketInfo.toString());
+				Logger4j.d(TAG, "----start a socket read thread socketinfo=" + connectingSocketInfo.toString());
 				//读取数据
 				while (true) {
 
+					if (connectingSocketInfo.getUserId().equalsIgnoreCase(Constant.LOST)) {
+						Logger4j.e(TAG, "an old account bean pushed by a new account");
+						return;
+					}
 
 					if (socket == null || socket.isClosed()) {
 						Logger4j.e(TAG, "Reader线程中socket异常");
@@ -53,7 +58,7 @@ public class Reader {
 						while ((size = bis.read(bytes)) > 0) {
 
 							String piece = new String(bytes, 0, size).trim();
-							Logger4j.d(TAG, "piece包:" + piece);
+							Logger4j.d(TAG, "piece=:" + piece);
 
 							/**
 							 * 解包逻辑:
@@ -85,9 +90,9 @@ public class Reader {
 
 					} catch (Exception e) {
 						e.printStackTrace();
-						Logger4j.e(TAG, "Reader线程中socket异常");
+						Logger4j.e(TAG, "Reader reading --> socket Exception");
 //						CloudBoardServer.sConnectingSocketInfos.remove(connectingSocketInfo);
-						return;
+//						return;
 					}
 				}
 

@@ -20,4 +20,7 @@ public interface Constant {
 	long SERIAL_UID_STROKE = 5L;
 	long SERIAL_UID_POINT = 6L;
 	long SERIAL_UID_PROXY_PROTOCOL = 1L;
+
+	//某客户端socket断开了
+	String LOST = "LOST";
 }
