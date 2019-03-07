@@ -34,7 +34,7 @@ public class CloudBoardServer {
 				ConnectingSocketInfo connectingSocketInfo = new ConnectingSocketInfo(acceptSocket, "");
 				String newAddress = connectingSocketInfo.getSocket().getInetAddress().getHostAddress();
 
-				//如果已经有这个ip的socketInfo,使之不可用(暂时)
+				//如果已经有这个ip的socketInfo,使之不可用
 				for (Iterator<ConnectingSocketInfo> iterator = sConnectingSocketInfos.iterator(); iterator.hasNext(); ) {
 					ConnectingSocketInfo next = iterator.next();
 					Socket socket = next.getSocket();
